@@ -16,6 +16,8 @@ export guniq=${guniq:-uniq}
 
 . $PWD/tools/sh/parts/env.sh
 
+set -e
+
 set +o pipefail &&
 set +o errexit &&
 set +o nounset

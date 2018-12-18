@@ -33,7 +33,7 @@ __log() # [Line-Type] [Header] [Msg] [Ctx] [Exit]
   test -z "$lvl" || {
     test $verbosity -ge $lvl || {
       test -n "$5" && exit $5 || {
-        exit 0
+        return
       }
     }
   }
@@ -43,7 +43,7 @@ __log() # [Line-Type] [Header] [Msg] [Ctx] [Exit]
   case "$1" in
 
     emerg|crit| error|warn|warning )
-        prefix="[$2]"
+        prefix="[$2] $1:"
       ;;
 
     note|info|debug )
@@ -109,3 +109,4 @@ else
       ;;
   esac
 fi
+# user-scripts-incubator/0.0.0-dev tools/sh/log.sh
