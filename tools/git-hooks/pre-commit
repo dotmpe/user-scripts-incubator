@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# A slightly sloppy sanity check; that we have no unused scripts in tools
+find tools -iname '*.sh' | cut -c10- | while read sh
+do
+
+  # Scipts handled explicitly elsewhere
+  case "$sh" in
+    user-env.sh ) continue
+      ;;
+  esac
+
+  echo Checking for $sh...
+
+  git grep -q '/'"$sh"'\>' &&
+    continue
+
+  echo "Expected $sh ref" >&2
+  exit 1
+done
