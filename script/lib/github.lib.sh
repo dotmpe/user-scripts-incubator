@@ -14,7 +14,7 @@ github_lib_load()
   gh_repo_lists=$STATUSDIR_ROOT/tree/github/repos
   gh_release_lists=$STATUSDIR_ROOT/tree/github/releases
 
-  test -n "$gh_api" || gh_api=http://api.github.com
+  test -n "$gh_api" || gh_api=https://api.github.com
   #test -n "$gh_api_key" || error "Emby API key required" 1
   gh_api_url_fmt="$gh_api/%s&api_key=${gh_api_key}"
 }
@@ -125,12 +125,21 @@ github_repo_list() # [Username]
 
 github_api__()
 {
-  curl_jsonapi "$1" "$(printf -- "$gh_api_curl_fmt" "$2")"
+  curl_jsonapi "$1" "$(printf -- "$gh_api_url_fmt" "$2")"
 }
 
-github_api__get()
+github_api__GET()
 {
   github_api__ "GET" "$1"
+}
+
+github_api__repo_get() # [Username] [Reponame]
+{
+  test -n "$1" || set -- "$NS_NAME" "$2"
+  test -n "$2" || set -- "$1" "$APP_ID"
+  test -n "$1" -a -n "$2" || return
+
+  github_api__GET "/repos/$1/$2"
 }
 
 

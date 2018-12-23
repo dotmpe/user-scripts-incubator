@@ -36,7 +36,7 @@ test "$GIT_COMMIT" = "$TRAVIS_COMMIT" || {
 }
 
 
-$LOG note "$scriptname" "GIT version: $GIT_DESCRIBE"
+$LOG note "" "GIT version: $GIT_DESCRIBE"
 
 export PATH=$PATH:$HOME/.basher/bin:$HOME/.basher/cellar/bin
 
@@ -104,6 +104,6 @@ do
     }
 done
 echo
-$LOG note "$scriptname" "ci/parts/init Done"
+$LOG note "" "ci/parts/init Done"
 echo '---------- Starting build'
 # Id: script-mpe/0.0.4-dev tools/ci/parts/init.sh

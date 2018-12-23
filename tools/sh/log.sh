@@ -6,7 +6,7 @@
 
 
 test -z "$verbosity" && {
-    test -n "$DEBUG" && verbosity=7 || verbosity=6
+  test -n "$DEBUG" && verbosity=7 || verbosity=6
 }
 
 logger_stderr_num() # Level-Name
@@ -26,14 +26,17 @@ logger_stderr_num() # Level-Name
 __log() # [Line-Type] [Header] [Msg] [Ctx] [Exit]
 {
   test -n "$2" || {
-    test -n "$scriptname" && set -- "$1" "$scriptname" "$3" "$4" "$5"
+    set -- "$1" "$scriptname" "$3" "$4" "$5"
+    # XXX: prolly want shell-lib-load base macro instead
+    test -n "$2" || set -- "$1" "$base" "$3" "$4" "$5"
+    test -n "$2" || set -- "$1" "$0" "$3" "$4" "$5"
   }
 
   lvl=$(logger_stderr_num "$1")
   test -z "$lvl" || {
     test $verbosity -ge $lvl || {
       test -n "$5" && exit $5 || {
-        return
+        return 0
       }
     }
   }

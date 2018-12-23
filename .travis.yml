@@ -22,7 +22,9 @@ env:
   - VND_SRC_PREFIX=$HOME/build
   - VND_GH_SRC=$VND_SRC_PREFIX
   - SRC_PREFIX=$VND_SRC_PREFIX
+  - export BASH_ENV=tools/ci/env.sh
   - secure: "xq8mYjWbSF64HuPTeqTu4DDdi0QbLTmN4hpaFHfnecroLkrFsVrFZSGbGEYojs8aqCoRXY28prFcIEywdNs+leCeI1OY28khUDuHuwoZNhoY5HZWa5Rs5kVY6EvgupZaRO32uVoJ8d1UH6O9EIbJYYZi5chas/U4dB/F5Hi0nrRbKEuNcqJrxuDiiiGP/psxmopVbGZIygfJm8unEZ+GTjZUw478qvijxHppVdPU7JHaWi+ugFJFKU2dKwtfQ9ojS8ZL0S1AE4qwJb9gqtE3PgHDJMQ509hf70/1k0Y+0aRouvtQasSk6Z4CzPqIfkQOdKQAuIOP9Hy5SxH8IMoUL5drAlUZ30wKxGGsI56Pd6r8KSyVmN/M5S1j7+wvekEFGP2W6JBNkB0ryMrrAu0DGk6oieqXAui7WYy975Fib8Z5umiJFOIepFl/SO/L0yDOO6jEGg3TGNLBZr2M1FW8+6e5yu11Txgdhr+IBdp7Hpq/d4pWF5QRVtUL0hG5jnjut5mfT9ujM/XYA32BWQ0fT6pTCS4dfvnL96bSmEXfY/aVP9b8HxmOXvOIZGF4K5A3wYpLfXJ+bd5HsG6DBzPCK9O95kTvjS5TztvRo9DT4Hpc/Yv9uXPRiOTP1Hk1KbaT9m8y6LMc91Bl7WK4KM18SM+F6mBykndddSR2Vry4zUc="
+
 
 before_install:
   - . ./tools/ci/before-install.sh
@@ -67,6 +69,7 @@ cache:
      - $HOME/build/bats-core/bats-core
      #- $HOME/build/bvberkum/bats-...
 
+
 after_failure:
   - . ./tools/ci/after-failure.sh
 after_success:
@@ -75,26 +78,25 @@ after_script:
   - . ./tools/ci/after.sh
 
 
-#matrix:
-#  include:
-#    - python: 2.7
-#
-#    - env: TRAVIS_US_PUBLISH="pre"
-#      if: branch = master
-#
-#    - env: TRAVIS_US_PUBLISH="rc"
-#      if: branch = test
-#
-#    - python: 3.5
-#      if: branch = test
+matrix:
+  include:
+    #- python: 2.7
 
-#    - if: branch = test
-#      env: ENV_NAME=testing
-#    branch = test
-#      env: ENV_NAME=production
+    - env: TRAVIS_US_PUBLISH="pre"
+      if: branch = master
+
+    - env: TRAVIS_US_PUBLISH="rc"
+      if: branch = test
+
+    #- python: 3.5
+    #  if: branch = test
 
 #  exclude: []
-#branches:
-#  only: []
-#  except: []
+
+branches:
+  only: []
+  except: []
+
 #deploy:
+
+# Id: /0.0 .travis.yml
