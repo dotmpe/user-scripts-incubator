@@ -1,30 +1,39 @@
-#!/bin/ash
+#!/usr/bin/env bash
 
-: "${CWD:=$PWD}"
+# Shell env profile script
 
+test -z "${sh_env_:-}" && sh_env_=1 || return 98 # Recursion
 
-# XXX: sync with current user-script tooling; +user-scripts
-: "${script_env_init:=$CWD/tools/sh/parts/env.sh}"
-. "$script_env_init"
+: "${CWD:="$PWD"}"
+: "${sh_tools:="$CWD/tools/sh"}"
+: "${ci_tools:="$CWD/tools/ci"}"
 
+: "${build_tab:="build.txt"}"
 
-: "${USER_ENV:=tools/sh/env.sh}"
-export USER_ENV
+. "$sh_tools/parts/env-strict.sh"
 
+: "${APP_ID:="user-scripts"}" # No-Sync
+: "${SUITE:="Sh"}"
+: "${sh_main_cmdl:="spec"}"
+: "${U_S:="$CWD"}"
+export scriptname=${scriptname:-"`basename -- "$0"`"}
 
-export scriptname=${scriptname:-$(basename "$0")}
+test -n "${sh_util_:-}" || {
 
-export uname=${uname:-$(uname -s)}
+  . "$sh_tools/util.sh"
+}
 
+sh_include \
+  env-0-1-lib-sys \
+  print-color remove-dupes unique-paths \
+  env-0-src
+SCRIPTPATH=
 
-# XXX: user-scripts tooling
-. $script_util/parts/env-std.sh
-. $script_util/parts/env-src.sh
-. $script_util/parts/env-ucache.sh
-. $script_util/parts/env-test-bats.sh
-#. $script_util/parts/env-test-feature.sh
-. $script_util/parts/env-basher.sh
-. $script_util/parts/env-logger-stderr-reinit.sh
-. $script_util/parts/env-github.sh
-# XXX: user-env?
-#. $script_util/parts/env-scriptpath.sh
+# XXX: test -z "${DEBUG:-}" ||
+print_yellow "${SUITE} Env parts" "$(suite_from_table "${build_tab}" "Parts" "${SUITE}" 0|tr '\n' ' ')" >&2
+
+suite_source "${build_tab}" "${SUITE}" 0
+
+test -z "$DEBUG" || print_green "" "Finished sh:env ${SUITE} <$0>"
+
+# Sync: U-S:

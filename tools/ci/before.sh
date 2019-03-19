@@ -1,6 +1,10 @@
-#!/bin/ash
-# See .travis.yml
+#!/usr/bin/env bash
+# CI suite stage 3. See .travis.yml
+set -u
+export_stage before-script before && announce_stage
 
-export_stage before-script before_script && announce_stage
+suite_run "build.txt" CI 3
 
-. $ci_util/deinit.sh
+stage_id=before close_stage
+set +u
+# Sync: U-S:

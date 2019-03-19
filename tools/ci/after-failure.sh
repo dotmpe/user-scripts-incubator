@@ -1,3 +1,9 @@
-#!/bin/sh
+#!/usr/bin/env bash
+# CI suite stage 6b. See .travis.yml
+set -eu
 export_stage failure && announce_stage
-. $ci_util/deinit.sh
+
+close_stage
+set +eu
+# Sync: BIN:
+# Sync: U-S:

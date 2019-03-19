@@ -88,9 +88,10 @@ matrix:
     - env: TRAVIS_US_PUBLISH="rc"
       if: branch = test
 
-    #- python: 3.5
-    #  if: branch = test
-
+#    - if: branch = test
+#      env: ENV_NAME=testing
+#    branch = test
+#      env: ENV_NAME=production
 #  exclude: []
 
 branches:

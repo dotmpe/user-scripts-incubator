@@ -106,4 +106,4 @@ done
 echo
 $LOG note "" "ci/parts/init Done"
 echo '---------- Starting build'
-# Id: script-mpe/0.0.4-dev tools/ci/parts/init.sh
+# Sync: U-S:

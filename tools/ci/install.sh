@@ -1,7 +1,19 @@
+#!/usr/bin/env bash
+# CI suite stage 2. See .travis.yml
+set -eu
 export_stage install && announce_stage
 
-# Get checkouts, tool installs and rebuild env (PATH etc.)
-. ./tools/ci/parts/install.sh &&
-script_env_init=tools/ci/parts/env.sh . ./tools/sh/env.sh
+$LOG note "" "Running install steps" "$(suite_from_table "build.txt" Parts CI 2 | tr '\n' ';')"
+suite_run "build.txt" CI 2
 
-. $ci_util/deinit.sh
+ci_announce "Sourcing env (II)..."
+$INIT_LOG "info" "" "Stages:" "$ci_stages"
+unset SCRIPTPATH ci_env_ sh_env_ sh_util_ ci_util_ sh_usr_env_
+. "${ci_tools}/env.sh"
+ci_stages="$ci_stages ci_env_2 sh_env_2"
+ci_env_2_ts=$ci_env_ts sh_env_2_ts=$sh_env_ts sh_env_2_end_ts=$sh_env_end_ts
+$INIT_LOG "info" "" "Stages:" "$ci_stages"
+
+stage_id=install close_stage
+set +eu
+# Sync: U-S:

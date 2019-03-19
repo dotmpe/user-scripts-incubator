@@ -1,7 +1,10 @@
-#!/bin/sh
+#!/usr/bin/env bash
+# CI suite stage 7. See .travis.yml
+set -eu
 export_stage after && announce_stage
-  #- . ./tools/ci/parts/after.sh
-  #- . ./tools/ci/parts/publish.sh
-announce "End of $scriptname"
-echo Done
-. $ci_util/deinit.sh
+
+sh_include publish
+
+stage_id=after close_stage
+set +eu
+# Sync: U-S:

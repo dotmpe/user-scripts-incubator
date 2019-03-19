@@ -1,24 +1,27 @@
-#!/bin/sh
+#!/usr/bin/env bash
+# CI suite stage 1. See .travis.yml
+set -ueo pipefail
 
-echo '--------------------'
-git status && git describe --always
-echo '--------------------'
-find ~/.travis || true
-echo '--------------------'
-echo "Terminal: $TERM"
-echo "Shell: $SHELL"
-echo "Shell-Options: $-"
-echo "Shell-Level: $SHLVL"
+: "${CWD:="$PWD"}"
+: "${U_S:="$CWD"}" # No-Sync
 
-. ./tools/ci/util.sh
+echo "Sourcing env (I)" >&2
+: "${ci_tools:="$CWD/tools/ci"}"
+. "${ci_tools}/env.sh"
 
-export_stage before-install before_install
-  # Leave loading env parts to sh/env, but sets may diverge..
-  # $script_util/parts/env-*.sh
-  # $ci_util/parts/env-*.sh
+ci_stages="$ci_stages ci_env_1 sh_env_1"
+ci_env_1_ts=$ci_env_ts sh_env_1_ts=$sh_env_ts sh_env_1_end_ts=$sh_env_end_ts
 
-script_env_init=tools/ci/parts/env.sh . ./tools/sh/env.sh
+trap ci_cleanup EXIT
 
-. $ci_util/parts/init.sh
+# Set timestamps for each stage start/end XXX: and stack
+export_stage before-install before_install && announce_stage
 
-. $ci_util/deinit.sh
+# XXX: ${SUITE}
+echo "Sourcing init parts" "$(suite_from_table "build.txt" Parts CI 1|tr '\n' ' ')" >&2
+suite_source "build.txt" CI 1
+test $SKIP_CI -eq 0 || exit 0
+
+stage_id=before_install close_stage
+set +euo pipefail
+# Sync: U-S:
