@@ -1,4 +1,4 @@
 #!/bin/sh
 
 $INIT_LOG "note" "" "Adding SCRIPTPATH" "$(dirname "$SCRIPT_SOURCE")"
-SCRIPTPATH="$SCRIPTPATH:$(dirname "$SCRIPT_SOURCE")/script/lib"
+SCRIPTPATH="$SCRIPTPATH${SCRIPTPATH:+":"}$(dirname "$SCRIPT_SOURCE")/script/lib"
