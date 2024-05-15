@@ -1,3 +1,20 @@
+ctx_yt_dlp_lib__load ()
+{
+  lib_require stattab context-class || return
+
+  local yt_dlp_conf=${yt_dlp_conf:-yt-dlp-uc.tab}
+  if_ok "${YT_DLP_CONF:=$(out_fmt= statusdir_lookup ${yt_dlp_conf:?} index)}" ||
+    $LOG alert :stattab "Expected yt-dlp config" "E$?:$yt_dlp_conf" $? ||
+      return
+}
+
+ctx_yt_dlp_lib__init ()
+{
+  test -z "${ctx_yt_dlp_lib_init-}" || return $_
+  lib_require urlstat-class || return
+}
+
+# XXX: this only does YouTube URL's
 ctx_yt_dlp__downloads__update ()
 {
   local url dirdef=${DEF_DIR:-yt-dlp} lk=:@yt-dlp:downloads:update
@@ -6,7 +23,28 @@ ctx_yt_dlp__downloads__update ()
     return
   }
   local url="$stb_data" yt_{id,mi,fbn,fext,tt,td,tbr,fps,vres,tl,fn,fp}
-  url_yt_id "$url" &&
+
+  stderr echo "ctx_yt_dlp__downloads__update $# $*"
+
+  stderr declare -f class.Context
+  class.Context .field tag-refs "$stb_rest" &&
+  class.Context .load $ctx_tag_refs || return
+
+  TODO "@yt-dlp:downloads:update $(sys_caller)" || return
+
+  local ctx_id
+  Context.field id "$stb_rest" && {
+    test -n "${ctx_id-}" || {
+      echo Resource.id ""
+    }
+  }
+
+  stderr echo stb_rest=$stb_rest
+  stderr echo $ctx_urls.id_from_url "$url"
+  #$ctx_urls.exists &&
+  #$ctx_urls.fetch &&
+
+  url_yt_id "$url" || return
   ctx_tab=$UC_DLTAB context --exists yt:$yt_id &&
     $LOG notice "$lk" "Found ..." "$_" && return
 
@@ -67,7 +105,7 @@ url_yt_dlp () # ~ <URL>
 {
   local url=${1:?} dirdef=${DEF_DIR:-yt-dlp}
   url_yt_id "$url" &&
-  url_yt_dlp_mi
+  url_yt_dlp_mi || return
 
   # XXX: should later track entries (table) but create symlinks for now
   local x
